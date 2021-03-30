@@ -8,3 +8,6 @@ git {
     }
 }
 rootProject.name = 'java-instrumentation-template'
+include 'executors-8'
+include 'executors-9'
+include 'executors-10'
