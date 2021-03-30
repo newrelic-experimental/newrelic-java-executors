@@ -17,7 +17,7 @@ To install:
 7. Save newrelic.yml 
 8. Restart the application.   
 
-The class_transformer stanza should look like this:   
+The class_transformer stanza should look something like this:   
    
 &nbsp;&nbsp;class_transformer:   
 &nbsp;&nbsp;&nbsp;&nbsp;# This instrumentation reports the name of the user principal returned from    
