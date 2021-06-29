@@ -29,6 +29,8 @@ public class Utils {
 	
 	// Not why but Caffeine causes unexpired tokens so ignoring
 	private static final String IGNORECAFFEINE = "com.github.benmanes.caffeine";
+	// ditto for sbt
+	private static final String IGNORESBT = "sbt";
 	
 	public static final String IGNORESPACKAGESPROPERTY = "Executors.ignore.packages";
 	
@@ -41,6 +43,7 @@ public class Utils {
 		NewRelic.getAgent().getLogger().log(Level.FINE, "initialized list of packages ignored for runnables: {0} ", ignoredPackages);
 		
 		ignoredPackages.add(IGNORECAFFEINE);
+		ignoredPackages.add(IGNORESBT);
 		Config config = NewRelic.getAgent().getConfig();
 		String ignoreList = config.getValue(IGNORESPACKAGESPROPERTY);
 		if(ignoreList != null && !ignoreList.isEmpty()) {
