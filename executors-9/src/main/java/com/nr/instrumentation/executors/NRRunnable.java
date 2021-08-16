@@ -8,7 +8,7 @@ import com.newrelic.api.agent.Trace;
 public class NRRunnable implements Runnable {
 	
 	private Runnable delegate = null;
-	private Token token = null;
+	protected Token token = null;
 	private static boolean isTransformed = false;
 	
 	public NRRunnable(Runnable r,Token t) {

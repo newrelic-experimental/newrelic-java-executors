@@ -69,22 +69,13 @@ public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 
 	@Override
 	public boolean addAll(Collection<? extends Runnable> c) {
-		Token t = null;
-		boolean ignore = false;
 		Collection<Runnable> copy = new ArrayList<Runnable>();
 
 		for(Runnable r : c) {
 			if(!(r instanceof NRRunnable)) {
-				if(t == null && !ignore) {
-					t = NewRelic.getAgent().getTransaction().getToken();
-					if(t != null && !t.isActive()) {
-						t.expire();
-						t = null;
-						ignore = true;
-					}
-				}
-				if(t != null) {
-					NRRunnable wrapper = new NRRunnable(r, t);
+				NRRunnable wrapper = Utils.getWrapper(r);
+				
+				if(wrapper != null) {
 					copy.add(wrapper);
 				} else {
 					copy.add(r);
@@ -138,9 +129,8 @@ public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 	public boolean add(Runnable e) {
 		NRRunnable wrapper = null;
 		if(!(e instanceof NRRunnable)) {
-			Token t = NewRelic.getAgent().getTransaction().getToken();
-			if(t != null && t.isActive()) {
-				wrapper = new NRRunnable(e, t);
+			wrapper = Utils.getWrapper(e);
+			if(wrapper != null) {
 				e = wrapper;
 			}
 		}
@@ -155,9 +145,8 @@ public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 	public boolean offer(Runnable e) {
 		NRRunnable wrapper = null;
 		if(!(e instanceof NRRunnable)) {
-			Token t = NewRelic.getAgent().getTransaction().getToken();
-			if(t != null && t.isActive()) {
-				wrapper = new NRRunnable(e, t);
+			wrapper = Utils.getWrapper(e);
+			if(wrapper != null) {
 				e = wrapper;
 			}
 		}
@@ -172,9 +161,8 @@ public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 	public void put(Runnable e) throws InterruptedException {
 		NRRunnable wrapper = null;
 		if(!(e instanceof NRRunnable)) {
-			Token t = NewRelic.getAgent().getTransaction().getToken();
-			if(t != null && t.isActive()) {
-				wrapper = new NRRunnable(e, t);
+			wrapper = Utils.getWrapper(e);
+			if(wrapper != null) {
 				e = wrapper;
 			}
 		}
@@ -185,9 +173,8 @@ public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 	public boolean offer(Runnable e, long timeout, TimeUnit unit) throws InterruptedException {
 		NRRunnable wrapper = null;
 		if(!(e instanceof NRRunnable)) {
-			Token t = NewRelic.getAgent().getTransaction().getToken();
-			if(t != null && t.isActive()) {
-				wrapper = new NRRunnable(e, t);
+			wrapper = Utils.getWrapper(e);
+			if(wrapper != null) {
 				e = wrapper;
 			}
 		}

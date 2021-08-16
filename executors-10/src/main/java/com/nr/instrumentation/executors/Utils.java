@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.RunnableScheduledFuture;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -29,6 +31,7 @@ public class Utils {
 	
 	// Not why but Caffeine causes unexpired tokens so ignoring
 	private static final String IGNORECAFFEINE = "com.github.benmanes.caffeine";
+	
 	// ditto for sbt
 	private static final String IGNORESBT = "sbt";
 	
@@ -101,8 +104,9 @@ public class Utils {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> NRRunnable getWrapper(Runnable runnable) {		
-		if(runnable == null || runnable instanceof NRRunnable || runnable instanceof RunnableFuture) return null;
+		if(runnable == null || runnable instanceof NRRunnable || runnable instanceof FutureTask) return null;
 		
 		if(isCompletion(runnable)) {
 			Token token = NewRelic.getAgent().getTransaction().getToken();
@@ -138,6 +142,14 @@ public class Utils {
 			token.expire();
 			token = null;
 			return null;
+		}
+
+		if(runnable instanceof RunnableScheduledFuture) {
+			return new NRRunnableScheduledFuture<T>((RunnableScheduledFuture<T>) runnable, token);
+		}
+		
+		if(runnable instanceof RunnableFuture) {
+			return new NRRunnableFuture<T>((RunnableFuture<T>)runnable, token);
 		}
 
 		if(runnable instanceof Comparable) {
