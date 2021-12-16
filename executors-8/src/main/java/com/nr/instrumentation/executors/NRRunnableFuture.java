@@ -12,6 +12,7 @@ public class NRRunnableFuture<T> extends NRRunnable implements RunnableFuture<T>
 	
 	private RunnableFuture<T> delegate = null;
 	private static boolean isTransformed = false;
+	private Token futureToken = null;
 
 	public NRRunnableFuture(RunnableFuture<T> delegate, Token token) {
 		super(delegate, token);
@@ -48,5 +49,14 @@ public class NRRunnableFuture<T> extends NRRunnable implements RunnableFuture<T>
 		return delegate != null ? delegate.get(timeout, unit) : null;
 	}
 
-
+	public Token getToken() {
+		Token t = futureToken;
+		futureToken = null;
+		return t;
+	}
+	
+	public void setToken(Token t) {
+		futureToken = t;
+	}
+	
 }

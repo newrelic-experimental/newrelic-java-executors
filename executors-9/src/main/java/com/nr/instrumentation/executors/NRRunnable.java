@@ -21,7 +21,7 @@ public class NRRunnable implements Runnable {
 	}
 
 	@Override
-	@Trace(async=true,excludeFromTransactionTrace=true)
+	@Trace(async=true)
 	public void run() {
 		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Executors","Submitted-Runnable",delegate.getClass().getSimpleName());
 		if(token != null) {

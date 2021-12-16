@@ -239,11 +239,12 @@ public class Utils {
 		return false;
 	}
 	
-	public static void logForkJoinTask(String format,Object... args) {
+	public static void log(String format,Object... args) {
 		NewRelic.getAgent().getLogger().log(Level.FINE, format, args);
 	}
 
-	public static void logForkJoinTask(Exception e, String format,Object... args) {
+	public static void log(Exception e, String format,Object... args) {
+		
 		NewRelic.getAgent().getLogger().log(Level.FINE, e, format,args);
 	}
 

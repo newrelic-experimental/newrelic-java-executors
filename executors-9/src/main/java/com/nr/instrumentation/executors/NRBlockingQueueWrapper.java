@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.newrelic.api.agent.NewRelic;
-import com.newrelic.api.agent.Token;
-
 public class NRBlockingQueueWrapper implements BlockingQueue<Runnable> {
 
 	private BlockingQueue<Runnable> delegate = null;

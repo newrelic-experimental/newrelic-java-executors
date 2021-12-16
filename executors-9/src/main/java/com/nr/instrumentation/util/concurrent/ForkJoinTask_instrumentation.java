@@ -57,7 +57,7 @@ public abstract class ForkJoinTask_instrumentation<V> {
 	
 	@Trace
 	public ForkJoinTask_instrumentation<V> fork() {
-		Utils.logForkJoinTask("Call to ForkJoinTask, {0}.fork(), on thread: {1}", getClass().getSimpleName(),Thread.currentThread().getName());
+		Utils.log("Call to ForkJoinTask, {0}.fork(), on thread: {1}", getClass().getSimpleName(),Thread.currentThread().getName());
 //		if(token == null && !alreadyWrapped) {
 //			Token t = Utils.getToken(this);
 //			if(t != null) {
