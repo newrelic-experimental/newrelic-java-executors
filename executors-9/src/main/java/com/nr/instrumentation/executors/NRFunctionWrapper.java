@@ -38,7 +38,7 @@ public class NRFunctionWrapper<T, R> extends NRTokenWrapper implements Function<
 					token.link();
 				}
 			} 
-			Utils.logForkJoinTask("current value of TokenAndRefCount: {0}", refCount);
+			Utils.log("current value of TokenAndRefCount: {0}", refCount);
 		}
 		if(delegate !=  null) {
 			return delegate.apply(t);
