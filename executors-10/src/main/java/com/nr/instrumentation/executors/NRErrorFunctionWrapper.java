@@ -37,7 +37,9 @@ public class NRErrorFunctionWrapper<R> extends NRTokenWrapper implements Functio
 					}
 					refCount.token = null;
 				} else {
-					token.link();
+					if(token != null) {
+						token.link();
+					}
 				}
 			} 
 		}

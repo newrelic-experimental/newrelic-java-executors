@@ -9,10 +9,10 @@ import com.newrelic.api.agent.Trace;
 public class NRFunctionWrapper<T, R> extends NRTokenWrapper implements Function<T, R> {
 
 	private Function<T, R> delegate = null;
-	
+
 	private static boolean isTransformed = false;
-	
-	
+
+
 	public NRFunctionWrapper(Function<T, R> d, boolean hasExec) {
 		super(hasExec);
 		delegate = d;
@@ -21,7 +21,7 @@ public class NRFunctionWrapper<T, R> extends NRTokenWrapper implements Function<
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
 		}
 	}
-	
+
 	@Override
 	@Trace(async=true)
 	public R apply(T t) {
@@ -30,13 +30,15 @@ public class NRFunctionWrapper<T, R> extends NRTokenWrapper implements Function<
 				Token token = refCount.token;
 				int count = refCount.refCount.decrementAndGet();
 				if (count < 1) {
-					if(token != null) {
+					if (token != null) {
 						token.linkAndExpire();
 					}
 					refCount.token = null;
 				} else {
-					token.link();
-				}
+					if(token != null) {
+						token.link();
+					}
+				} 
 			} 
 		}
 		if(delegate !=  null) {

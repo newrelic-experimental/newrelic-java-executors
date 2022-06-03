@@ -57,21 +57,6 @@ public abstract class ForkJoinTask_instrumentation<V> {
 	
 	@Trace
 	public ForkJoinTask_instrumentation<V> fork() {
-		Utils.log("Call to ForkJoinTask, {0}.fork(), on thread: {1}", getClass().getSimpleName(),Thread.currentThread().getName());
-//		if(token == null && !alreadyWrapped) {
-//			Token t = Utils.getToken(this);
-//			if(t != null) {
-//				if(t.isActive()) {
-//					token = t;
-//				} else {
-//					t.expire();
-//					t = null;
-//				}
-//			}
-//		}
-//		if(this instanceof CountedCompleter_instrumentation) {
-//			
-//		}
 		return Weaver.callOriginal();
 	}
 	

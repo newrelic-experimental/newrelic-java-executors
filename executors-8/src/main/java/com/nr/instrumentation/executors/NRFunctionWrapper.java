@@ -28,14 +28,18 @@ public class NRFunctionWrapper<T, R> extends NRTokenWrapper implements Function<
 		if (hasExecutor) {
 			if (refCount != null) {
 				Token token = refCount.token;
-				int count = refCount.refCount.decrementAndGet();
-				if (count < 1) {
-					if(token != null) {
-						token.linkAndExpire();
-					}
-					refCount.token = null;
-				} else {
-					token.link();
+				if (token != null) {
+					int count = refCount.refCount.decrementAndGet();
+					if (count < 1) {
+						if (token != null) {
+							token.linkAndExpire();
+						}
+						refCount.token = null;
+					} else {
+						if(token != null) {
+							token.link();
+						}
+					} 
 				}
 			} 
 		}

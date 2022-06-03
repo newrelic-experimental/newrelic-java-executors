@@ -39,7 +39,9 @@ public class NRErrorBiFunctionWrapper<T, R> extends NRTokenWrapper implements Bi
 					}
 					refCount.token = null;
 				} else {
-					token.link();
+					if(token != null) {
+						token.link();
+					}
 				}
 			} 
 		}
