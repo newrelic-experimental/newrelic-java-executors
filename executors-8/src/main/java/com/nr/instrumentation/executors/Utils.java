@@ -21,6 +21,8 @@ public class Utils {
 	
 	public static int MAXCFSEGMENTS = 50;
 	
+	public static final String LAMBDA = "$$Lambda";
+	
 	private static List<String> ignoredPackages = new ArrayList<String>();
 	
 	private static List<String> ignoredClasses = new ArrayList<String>();
