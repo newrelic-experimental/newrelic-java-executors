@@ -1,5 +1,7 @@
 package com.nr.instrumentation.executors;
 
+import java.util.logging.Level;
+
 import com.newrelic.agent.bridge.AgentBridge;
 import com.newrelic.api.agent.NewRelic;
 import com.newrelic.api.agent.Token;
@@ -9,11 +11,25 @@ public class NRRunnable implements Runnable {
 	
 	private Runnable delegate = null;
 	protected Token token = null;
+	private String classname = null;
 	private static boolean isTransformed = false;
 	
 	public NRRunnable(Runnable r,Token t) {
 		delegate = r;
 		token = t;
+		String cn = delegate.getClass().getSimpleName();
+		NewRelic.getAgent().getLogger().log(Level.FINE, "Wrapping class {0}", cn);
+		if(cn.contains(Utils.LAMBDA)) {
+			NewRelic.getAgent().getLogger().log(Level.FINE, "Class contains {0}", Utils.LAMBDA);
+			int index = cn.indexOf(Utils.LAMBDA);
+			NewRelic.getAgent().getLogger().log(Level.FINE, "Index is {0}", index);
+			if(index > -1) {
+				cn = cn.substring(0, index+Utils.LAMBDA.length());
+			}
+			NewRelic.getAgent().getLogger().log(Level.FINE, "Modified classname {0}", cn);
+		}
+		classname = cn != null && !cn.isEmpty() ? cn : "Runnable";
+		NewRelic.getAgent().getLogger().log(Level.FINE, "Set classname {0}", classname);
 		if(!isTransformed) {
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
 			isTransformed = true;
@@ -23,7 +39,7 @@ public class NRRunnable implements Runnable {
 	@Override
 	@Trace(async=true,excludeFromTransactionTrace=true)
 	public void run() {
-		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Executors","Submitted-Runnable",delegate.getClass().getSimpleName());
+		NewRelic.getAgent().getTracedMethod().setMetricName("Custom","Executors","Submitted-Runnable",classname);
 		if(token != null) {
 			token.linkAndExpire();
 			token = null;
