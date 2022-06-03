@@ -36,7 +36,9 @@ public class NRBiConsumer<T,U> extends NRTokenWrapper implements BiConsumer<T, U
 					}
 					refCount.token = null;
 				} else {
-					token.link();
+					if(token != null) {
+						token.link();
+					}
 				}
 			} 
 		}

@@ -34,10 +34,11 @@ public class NRConsumerWrapper<T> extends NRTokenWrapper implements Consumer<T> 
 					}
 					refCount.token = null;
 				} else {
-					token.link();
+					if(token != null) {
+						token.link();
+					}
 				}
 			} 
-			Utils.log("current value of TokenAndRefCount: {0}", refCount);
 		}
 		if (delegate != null) {
 			delegate.accept(t);

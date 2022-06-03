@@ -30,7 +30,6 @@ public abstract class CountedCompleter_instrumentation<T> extends ForkJoinTask_i
 	@Trace
 	protected boolean exec() {
 		
-		Utils.log("CountedCompleter call to {0}.exec(), pending={1}, completer={2}, thread={3}", getClass().getSimpleName(),pending,completer,Thread.currentThread().getName());
 		CountedCompleter_instrumentation<?> c = completer;
 		
 		if(c != null && super.token != null) {

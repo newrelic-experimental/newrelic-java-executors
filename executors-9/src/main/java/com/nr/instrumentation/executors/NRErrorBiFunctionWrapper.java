@@ -37,10 +37,11 @@ public class NRErrorBiFunctionWrapper<T, R> extends NRTokenWrapper implements Bi
 					}
 					refCount.token = null;
 				} else {
-					token.link();
+					if(token != null) {
+						token.link();
+					}
 				}
 			} 
-			Utils.log("current value of TokenAndRefCount: {0}", refCount);
 		}
 		if(delegate != null) {
 			return delegate.apply(t, e);

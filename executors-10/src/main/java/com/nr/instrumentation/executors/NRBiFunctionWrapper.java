@@ -9,9 +9,9 @@ import com.newrelic.api.agent.Trace;
 public class NRBiFunctionWrapper<T, U, R> extends NRTokenWrapper implements BiFunction<T, U, R> {
 
 	private BiFunction<T, U, R> delegate = null;
-	
+
 	private static boolean isTransformed = false;
-	
+
 	public NRBiFunctionWrapper(BiFunction<T, U, R> d, boolean hasExec) {
 		super(hasExec);
 		delegate = d;
@@ -20,7 +20,7 @@ public class NRBiFunctionWrapper<T, U, R> extends NRTokenWrapper implements BiFu
 			AgentBridge.instrumentation.retransformUninstrumentedClass(getClass());
 		}
 	}
-	
+
 	@Override
 	@Trace(async=true)
 	public R apply(T t, U u) {
@@ -29,13 +29,15 @@ public class NRBiFunctionWrapper<T, U, R> extends NRTokenWrapper implements BiFu
 				Token token = refCount.token;
 				int count = refCount.refCount.decrementAndGet();
 				if (count < 1) {
-					if(token != null) {
+					if (token != null) {
 						token.linkAndExpire();
 					}
 					refCount.token = null;
 				} else {
-					token.link();
-				}
+					if(token != null) {
+						token.link();
+					}
+				} 
 			} 
 		}
 		if(delegate != null) {
