@@ -1,3 +1,8 @@
+## Version: [v4.0.1](https://github.com/newrelic-experimental/newrelic-java-executors/releases/tag/v4.0.1) | Created: 2023-09-25
+### Build Upgrades
+- Updated vendor title and added release workflow
+
+
 ## Installation
 
 To install:
