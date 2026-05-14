@@ -177,7 +177,7 @@ subprojects {
     description = 'Copies compiled jar to the NEW_RELIC_EXTENSIONS_DIR.'
     group  = 'New Relic Labs'
 
-    def extDir = System.getenv("NEW_RELIC_EXTENSIONS_DIR") ?: " "
+    def extDir = System.getenv("NEW_RELIC_EXTENSIONS_DIR") ?: "/Users/gsidhwani/Documents/Github/dev-mule-standalone/8.25.0/newrelic/extensions"
 
     from jar
     into extDir
@@ -189,6 +189,7 @@ subprojects {
 
   install.doFirst  {
     def extDir = System.getenv("NEW_RELIC_EXTENSIONS_DIR")
+    extDir = "/Users/gsidhwani/Documents/Github/dev-mule-standalone/8.25.0/newrelic/extensions"
      if (extDir == null) {
          throw new Exception("Must set NEW_RELIC_EXTENSIONS_DIR.")
      }
