@@ -43,15 +43,29 @@ public abstract class ForkJoinTask_instrumentation<V> {
 		if(token != null) {
 			token.link();
 		}
-		return Weaver.callOriginal();
+		try {
+			return Weaver.callOriginal();
+		} finally {
+			if(token != null) {
+				token.expire();
+				token = null;
+			}
+		}
 	}
-	
+
 	@Trace(async=true,excludeFromTransactionTrace=true)
 	protected boolean exec() {
 		if(token != null) {
 			token.link();
 		}
-		return Weaver.callOriginal();
+		try {
+			return Weaver.callOriginal();
+		} finally {
+			if(token != null) {
+				token.expire();
+				token = null;
+			}
+		}
 	}
 	
 	@Trace
