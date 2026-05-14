@@ -35,7 +35,11 @@ public abstract class ForkJoinPool_instrumentation {
 		String taskClassname = task.getClass().getName();
 		boolean ignore = Utils.ignorePackage(taskClassname);
 
-		if(!ignore) {
+		// Skip token creation for Mule internal ForkJoinTasks — they don't complete
+		// via exec()/setDone() so tokens leak. Processor visibility comes from
+		// ThreadPoolExecutor wrapping (NRCallable/NRRunnable) not from ForkJoinPool tokens.
+		if(!ignore && !taskClassname.startsWith("org.mule.")) {
+			NewRelic.getAgent().getLogger().log(java.util.logging.Level.FINE, "EXECUTOR-DEBUG: externalSubmit creating token for {0}", taskClassname);
 			if (!Utils.isCompletion(task)) {
 				if (task.token == null && !task.alreadyWrapped) {
 
@@ -48,10 +52,10 @@ public abstract class ForkJoinPool_instrumentation {
 							t = null;
 						}
 					}
-				} 
+				}
 			}
 		}
-		
+
 		return Weaver.callOriginal();
 	}
 
@@ -60,7 +64,10 @@ public abstract class ForkJoinPool_instrumentation {
 
 		@Trace(excludeFromTransactionTrace=true)
 		void push(ForkJoinTask_instrumentation<?> task,ForkJoinPool_instrumentation pool, boolean signalIfEmpty) {
-			if (!Utils.isCompletion(task)) {
+			String taskClassname = task.getClass().getName();
+			// Skip Mule internal tasks — same reason as externalSubmit
+			if (!taskClassname.startsWith("org.mule.") && !Utils.isCompletion(task)) {
+				NewRelic.getAgent().getLogger().log(java.util.logging.Level.FINE, "EXECUTOR-DEBUG: WorkQueue.push creating token for {0}", taskClassname);
 				if (task.token == null && !task.alreadyWrapped) {
 
 					Token t = Utils.getToken(task);
@@ -72,7 +79,7 @@ public abstract class ForkJoinPool_instrumentation {
 							t = null;
 						}
 					}
-				} 
+				}
 			}
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","WorkQueue","push",task.getClass().getName()});
 			Weaver.callOriginal();

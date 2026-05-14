@@ -36,7 +36,8 @@ public abstract class ForkJoinPool_instrumentation {
 		String taskClassname = task.getClass().getName();
 		boolean ignore = Utils.ignorePackage(taskClassname);
 
-		if(!ignore) {
+		// Skip Mule internal ForkJoinTasks — tokens leak because tasks don't complete via setDone()
+		if(!ignore && !taskClassname.startsWith("org.mule.")) {
 			if (!Utils.isCompletion(task)) {
 				if (task.token == null && !task.alreadyWrapped) {
 
@@ -49,7 +50,7 @@ public abstract class ForkJoinPool_instrumentation {
 							t = null;
 						}
 					}
-				} 
+				}
 			}
 		}
 
@@ -61,7 +62,9 @@ public abstract class ForkJoinPool_instrumentation {
 
 		@Trace(excludeFromTransactionTrace=true)
 		void push(ForkJoinTask_instrumentation<?> task,ForkJoinPool_instrumentation pool) {
-			if (!Utils.isCompletion(task)) {
+			String taskClassname = task.getClass().getName();
+			// Skip Mule internal tasks
+			if (!taskClassname.startsWith("org.mule.") && !Utils.isCompletion(task)) {
 				if (task.token == null && !task.alreadyWrapped) {
 
 					Token t = Utils.getToken(task);
@@ -73,7 +76,7 @@ public abstract class ForkJoinPool_instrumentation {
 							t = null;
 						}
 					}
-				} 
+				}
 			}
 			NewRelic.getAgent().getTracedMethod().setMetricName(new String[] {"Custom","WorkQueue","push",task.getClass().getName()});
 			Weaver.callOriginal();
